@@ -16,7 +16,7 @@ namespace AccountOwnerServer
     {
         public Startup(IConfiguration configuration,ILoggerFactory loggerFactory)
         {
-            NLog.LogManager.LoadConfiguration("/nlog.config");
+            NLog.LogManager.LoadConfiguration("./nlog.config");
             Configuration = configuration;
         }
 

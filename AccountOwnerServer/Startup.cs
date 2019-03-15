@@ -5,13 +5,18 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using System;
+using System.IO;
 
 namespace AccountOwnerServer
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration,ILoggerFactory loggerFactory)
         {
+            NLog.LogManager.LoadConfiguration("/nlog.config");
             Configuration = configuration;
         }
 
@@ -23,6 +28,8 @@ namespace AccountOwnerServer
             services.ConfigureCors();
 
             services.ConfigureIISIntegration();
+
+            services.ConfigureLoggerService();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

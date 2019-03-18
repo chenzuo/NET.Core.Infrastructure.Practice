@@ -6,6 +6,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Contracts;
 using Repository;
+using System;
 
 namespace GlobalErrorHandling.Extensions
 {
@@ -27,7 +28,7 @@ namespace GlobalErrorHandling.Extensions
         {
             services.Configure<IISOptions>(options =>
             {
-//
+                //
             });
         }
 
@@ -39,7 +40,10 @@ namespace GlobalErrorHandling.Extensions
         public static void ConfigureMySqlContext(this IServiceCollection services, IConfiguration config)
         {
             var connectionString = config["mysqlconnection:connectionString"];
-            services.AddDbContext<RepositoryContext>(o => o.UseMySql(connectionString));
+            services.AddDbContext<RepositoryContext>(options => options.UseMySql(connectionString, mySqlOptions =>
+             {
+                 mySqlOptions.ServerVersion(new Version(5, 7, 17), Pomelo.EntityFrameworkCore.MySql.Infrastructure.ServerType.MySql);
+             }));
         }
 
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)

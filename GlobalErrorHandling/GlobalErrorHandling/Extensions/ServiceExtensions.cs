@@ -39,11 +39,13 @@ namespace GlobalErrorHandling.Extensions
 
         public static void ConfigureMySqlContext(this IServiceCollection services, IConfiguration config)
         {
-            var connectionString = config["mysqlconnection:connectionString"];
-            services.AddDbContext<RepositoryContext>(options => options.UseMySql(connectionString, mySqlOptions =>
-             {
-                 mySqlOptions.ServerVersion(new Version(5, 7, 17), Pomelo.EntityFrameworkCore.MySql.Infrastructure.ServerType.MySql);
-             }));
+            //var connectionString = config["mysqlconnection:connectionString"];
+            //services.AddDbContext<RepositoryContext>(options => options.UseMySql(connectionString, mySqlOptions =>
+            // {
+            //     mySqlOptions.ServerVersion(new Version(5, 7, 25), Pomelo.EntityFrameworkCore.MySql.Infrastructure.ServerType.MySql);
+            // }));
+
+            services.AddDbContextPool<RepositoryContext>
         }
 
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)

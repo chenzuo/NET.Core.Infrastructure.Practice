@@ -1,4 +1,5 @@
-﻿using LoggerService;
+﻿using Contracts;
+using LoggerService;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,19 @@ namespace GlobalErrorHandling.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly ILoggerManager _logger;
-        public ValuesController(ILoggerManager logger)
+        private readonly IRepositoryWrapper _repoWrapper;
+        public ValuesController(ILoggerManager logger, IRepositoryWrapper repoWrapper)
         {
             _logger = logger;
+            _repoWrapper = repoWrapper;
         }
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            _logger.LogInfo("Fetching all the Students from the storage");
-            throw new Exception("Exception while fetching all the students from the storage.");
+            var domesticAccounts = _repoWrapper.Account.FindByCondition(x => x.AccountType.Equals("Domestic"));
+            var owners = _repoWrapper.Owner.FindAll();
 
-           
             return new string[] { "value1", "value2" };
         }
 

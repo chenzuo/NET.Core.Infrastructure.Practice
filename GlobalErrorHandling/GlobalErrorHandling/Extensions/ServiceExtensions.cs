@@ -1,10 +1,11 @@
 ﻿using LoggerService;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Entities;
+using Microsoft.EntityFrameworkCore;
+using Contracts;
+using Repository;
 
 namespace GlobalErrorHandling.Extensions
 {
@@ -26,7 +27,7 @@ namespace GlobalErrorHandling.Extensions
         {
             services.Configure<IISOptions>(options =>
             {
-
+//
             });
         }
 
@@ -34,5 +35,17 @@ namespace GlobalErrorHandling.Extensions
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
         }
+
+        public static void ConfigureMySqlContext(this IServiceCollection services, IConfiguration config)
+        {
+            var connectionString = config["mysqlconnection:connectionString"];
+            services.AddDbContext<RepositoryContext>(o => o.UseMySql(connectionString));
+        }
+
+        public static void ConfigureRepositoryWrapper(this IServiceCollection services)
+        {
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+        }
+
     }
 }

@@ -45,7 +45,7 @@ namespace GlobalErrorHandling.Extensions
             //     mySqlOptions.ServerVersion(new Version(5, 7, 25), Pomelo.EntityFrameworkCore.MySql.Infrastructure.ServerType.MySql);
             // }));
 
-            services.AddDbContextPool<RepositoryContext>
+            services.AddDbContext<RepositoryContext>(o => o.UseInMemoryDatabase("accountowner"));
         }
 
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)

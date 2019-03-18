@@ -7,5 +7,7 @@ namespace Contracts
 {
     public interface IAccountRepository : IRepositoryBase<Account>
     {
+        IEnumerable<Account> GetAllAccounts();
+        void CreateAccount(Account account);
     }
 }

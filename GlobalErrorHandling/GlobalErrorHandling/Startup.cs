@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace GlobalErrorHandling
 {
@@ -28,6 +29,11 @@ namespace GlobalErrorHandling
 
             services.ConfigureMySqlContext(Configuration);
             services.ConfigureRepositoryWrapper();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "AccountOwner API", Version = "v1" });
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -57,6 +63,12 @@ namespace GlobalErrorHandling
                     ForwardedHeaders = ForwardedHeaders.All
                 });
             app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "AccountOwner API V1");
+            });
 
             app.UseMvc();
         }

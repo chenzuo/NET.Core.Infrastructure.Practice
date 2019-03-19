@@ -12,7 +12,7 @@ namespace webapplication.Controllers
     public class ValuesController : ControllerBase
     {
         // GET api/values
-        [HttpGet,Authorize]
+        [HttpGet, Authorize(Roles = "Manager")]
         public ActionResult<IEnumerable<string>> Get()
         {
             return new string[] { "John Doe", "Jane Doe" };

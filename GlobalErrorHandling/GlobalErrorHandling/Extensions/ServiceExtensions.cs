@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Contracts;
 using Repository;
 using System;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Serilog;
 
 namespace GlobalErrorHandling.Extensions
 {
@@ -40,7 +43,10 @@ namespace GlobalErrorHandling.Extensions
         public static void ConfigureMySqlContext(this IServiceCollection services, IConfiguration config)
         {
             var connectionString = config["mysqlconnection:connectionString"];
-            services.AddDbContext<RepositoryContext>(options => options.UseMySql(connectionString, mySqlOptions =>
+            services.AddDbContext<RepositoryContext>(options => options
+            .EnableDetailedErrors(false)
+            .UseLoggerFactory(GetLoggerFactory())
+            .UseMySql(connectionString, mySqlOptions =>
              {
                  mySqlOptions.ServerVersion(new Version(5, 7, 25), Pomelo.EntityFrameworkCore.MySql.Infrastructure.ServerType.MySql);
              }));
@@ -53,5 +59,13 @@ namespace GlobalErrorHandling.Extensions
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
         }
 
+        // public static readonly LoggerFactory MyLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information, true) });
+        private static ILoggerFactory GetLoggerFactory()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder => builder.AddConsole().AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information));
+            return serviceCollection.BuildServiceProvider()
+                    .GetService<ILoggerFactory>();
+        }
     }
 }
